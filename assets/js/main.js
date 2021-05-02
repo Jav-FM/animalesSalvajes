@@ -15,21 +15,49 @@ import Serpiente from "./serpiente.js";
 import Aguila from "./aguila.js";
 
 
-//IIFE + evento de selector + consulta API
+//Función para consulta de Api
+const getAnimal = async (ruta) => {
+    const { data } = await axios.get(ruta);
+    const animalsArray = data.animales;
+    const animalData = animalsArray.find( animal => 
+        animal.name == animalSelector.value);
+    return animalData
+}
 
+//IIFE + evento de selector + consulta API: Cambio de imagen según selector
 (() => {
     animalSelector.addEventListener("change", async() => {
-        const { data } = await axios.get("/animales.json");
-        const animalsArray = data.animales;
-        console.log(animalsArray);
-        const animalData = animalsArray.find( animal => 
-            animal.name == animalSelector.value);
-        console.log(animalData)
-            let foto = animalData.imagen;
+        getAnimal("/animales.json").then(resp => {
+            let foto = resp.imagen;
             imgVisor.style.backgroundImage = `url(assets/imgs/${foto})`;
-            imgVisor.style.backgroundSize = "cover";
+            imgVisor.style.backgroundPosition = "center";
             visorContainer.style.padding="0";
+        })
     });
+})();
+
+//IIFE + evento de selector + consulta API: Creación de instancia
+(() => {
+    btnRegistrar.addEventListener("click", async() => {
+        getAnimal("/animales.json").then(resp => {
+            let sonidoAnimal = resp.sonido;
+            let foto = resp.imagen;
+            let animalClass = animalSelector.value;
+            let nuevoAnimal = {};
+            if (animalClass == "Leon") {
+                nuevoAnimal = new Leon(animalSelector.value, ageInput.value, foto, comentarios.value, sonidoAnimal);
+            } else if (animalClass == "Lobo") {
+                nuevoAnimal  = new Lobo(animalSelector.value, ageInput.value, foto, comentarios.value, sonidoAnimal);
+            } else if (animalClass == "Oso") {
+                nuevoAnimal  = new Oso(animalSelector.value, ageInput.value, foto, comentarios.value, sonidoAnimal);
+            } else if (animalClass == "Serpiente") {
+                nuevoAnimal  = new Serpiente(animalSelector.value, ageInput.value, foto, comentarios.value, sonidoAnimal);
+            } else {
+                nuevoAnimal  = new Aguila(animalSelector.value, ageInput.value, foto, comentarios.value, sonidoAnimal);
+            }
+            console.log(nuevoAnimal)
+        })
+    })
 })();
 
 //crear las instancias de los animales asociandolas a los selectores del html
