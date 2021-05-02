@@ -2,7 +2,8 @@
 let animalSelector = document.getElementById("animal");
 let ageInput = document.getElementById("edad");
 let comentarios = document.getElementById("comentarios");
-let imgVisor = document.getElementById("visor");
+let imgVisor = document.getElementById("preview");
+let visorContainer = document.getElementById("previewContainter");
 let btnRegistrar = document.getElementById("btnRegistrar");
 let divTabla = document.getElementById("animales");
 
@@ -25,8 +26,9 @@ import Aguila from "./aguila.js";
             animal.name == animalSelector.value);
         console.log(animalData)
             let foto = animalData.imagen;
-            let imgSrc = `assets/imgs/${foto}`;
-            imgVisor.setAttribute("src", imgSrc);
+            imgVisor.style.backgroundImage = `url(assets/imgs/${foto})`;
+            imgVisor.style.backgroundSize = "cover";
+            visorContainer.style.padding="0";
     });
 })();
 
